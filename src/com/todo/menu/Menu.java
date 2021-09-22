@@ -3,15 +3,22 @@ public class Menu {
 
     public static void displaymenu()
     {
-        System.out.println();
-        System.out.println("1. Add a new item ( add )");
-        System.out.println("2. Delete an existing item ( del )");
-        System.out.println("3. Update an item  ( edit )");
-        System.out.println("4. List all items ( ls )");
-        System.out.println("5. sort the list by name ( ls_name_asc )");
-        System.out.println("6. sort the list by name ( ls_name_desc )");
-        System.out.println("7. sort the list by date ( ls_date )");
-        System.out.println("8. exit (Or press escape key to exit)");
+        System.out.println("********************************************");
+        System.out.println("명령어를 입력하세요(괄호 안의 명령어)");
+        System.out.println("[add]           : 아이템 추가");
+        System.out.println("[del]           : 존재하는 아이템 삭제");
+        System.out.println("[edit]          : 아이템 업데이트");
+        System.out.println("[ls]            : 모든 아이템 목록 보기");
+        System.out.println("[ls_name_asc]   : 리스트를 이름순으로 정렬(오름차순)");
+        System.out.println("[ls_name_desc]  : 리스트를 이름순으로 정렬(내림차순)");
+        System.out.println("[ls_date]       : 리스트를 날짜순으로 정렬");
+        System.out.println("[exit]          : 나가기");
+        System.out.println("********************************************");
         System.out.println("Enter your choice >");
+    }
+    
+    public static void prompt()
+    {
+    	System.out.print("\nCommand > ");
     }
 }
