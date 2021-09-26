@@ -7,11 +7,23 @@ public class TodoItem {
     private String title;
     private String desc;
     private String current_date;
+    private String category;
+    private String due_date;
 
 
     public TodoItem(String title, String desc){
         this.title=title;
         this.desc=desc;
+        SimpleDateFormat f = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
+        this.current_date= f.format(new Date());
+    }
+    
+    public TodoItem(String category, String title, String desc, String due_date) // 오버로드
+    {
+    	this.category=category;
+    	this.title=title;
+    	this.desc=desc;
+    	this.due_date=due_date;
         SimpleDateFormat f = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
         this.current_date= f.format(new Date());
     }
@@ -22,6 +34,10 @@ public class TodoItem {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+    
+    public String getCate() {
+    	return category;
     }
 
     public String getDesc() {
@@ -41,11 +57,11 @@ public class TodoItem {
     }
     
     public String toSaveString() {
-    	return title + "##" + desc + "##" + current_date + "\n";
+    	return category + "##" + title + "##" + desc + "##" + due_date + "##" + current_date + "\n";
     }
     
     @Override
     public String toString() {
-    	return "[" + title + "]" + "##" + desc + "##" + current_date + "\n";
+    	return "[" + category + "] " + title + " - " + desc + " - " + due_date + " - " + current_date + "\n";
     }
 }

@@ -19,7 +19,9 @@ public class TodoMain {
 		do {
 			Menu.prompt();
 			isList = false;
-			String choice = sc.next();
+			String choices = sc.nextLine();
+			String choice = choices.split(" ")[0];
+			
 			switch (choice) {
 			case "help": // help 명령어 시 display menu 기능 호출
 				Menu.displaymenu();
@@ -40,6 +42,10 @@ public class TodoMain {
 			case "ls":
 				TodoUtil.listAll(l);
 				break;
+				
+			case "ls_cate":
+				TodoUtil.listAllCategory(l);
+				break;
 
 			case "ls_name_asc":
 				l.sortByName();
@@ -59,6 +65,21 @@ public class TodoMain {
 				System.out.println("날짜순으로 정렬완료!");
 				isList = true;
 				break;
+				
+			case "ls_date_desc":
+				l.sortByDate();
+				l.reverseList();
+				System.out.println("날짜순으로 정렬완료! (내림차순)");
+				isList = true;
+				break;
+			
+			case "find":
+				TodoUtil.findKeyWord(l, choices.split(" ")[1]); // keyWord라고만 가정함 (하나의 단어)
+				break;
+				
+			case "find_cate":
+				TodoUtil.findCate(l, choices.split(" ")[1]); // keyWord라고만 가정함 (하나의 단어)
+				break;	
 
 			case "exit":
 				quit = true;

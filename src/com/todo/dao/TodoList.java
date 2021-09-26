@@ -36,10 +36,10 @@ public class TodoList {
 	}
 
 	public void listAll() {
-		System.out.println("\n"
-				+ "inside list_All method\n");
-		for (TodoItem myitem : list) {
-			System.out.println(myitem.getTitle() + myitem.getDesc());
+		System.out.println("[전체 목록, 총 " + list.size() + "개]");
+		int count=0;		
+		for (TodoItem item : list) {
+			System.out.print(++count + ". " + item.toString());
 		}
 	}
 	
