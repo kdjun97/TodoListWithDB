@@ -6,14 +6,16 @@ import com.todo.dao.TodoList;
 import com.todo.menu.Menu;
 import com.todo.service.TodoUtil;
 
+
 public class TodoMain {
 	
 	public static void start() {
 		Scanner sc = new Scanner(System.in);
 		TodoList l = new TodoList();
+		//l.importData("todolist.txt");
 		boolean isList = false;
 		boolean quit = false;
-		TodoUtil.loadList(l, "todolist.txt");		
+//		TodoUtil.loadList(l, "todolist.txt");		
 		Menu.displaymenu();
 		
 		do {
@@ -47,30 +49,26 @@ public class TodoMain {
 				TodoUtil.listAllCategory(l);
 				break;
 
-			case "ls_name_asc":
-				l.sortByName();
-				isList = true;
+			case "ls_name":
 				System.out.println("제목순으로 정렬완료! (오름차순)");
+				TodoUtil.listAll(l, "title", 1);
 				break;
 
 			case "ls_name_desc":
-				l.sortByName();
-				l.reverseList();
 				System.out.println("제목순으로 정렬완료! (내림차순)");
-				isList = true;
+				TodoUtil.listAll(l, "title", 0);
 				break;
 				
 			case "ls_date":
-				l.sortByDate();
-				System.out.println("날짜순으로 정렬완료!");
-				isList = true;
+				System.out.println("날짜순으로 정렬완료! (오름차순)");
+				TodoUtil.listAll(l, "title", 1);
+
 				break;
 				
 			case "ls_date_desc":
-				l.sortByDate();
-				l.reverseList();
 				System.out.println("날짜순으로 정렬완료! (내림차순)");
-				isList = true;
+				TodoUtil.listAll(l, "title", 0);
+
 				break;
 			
 			case "find":
@@ -90,8 +88,10 @@ public class TodoMain {
 				break;
 			}
 			
-			if(isList) l.listAll();
+			if(isList) l.listAll(l);
 		} while (!quit);
 		TodoUtil.saveList(l, "todolist.txt");
 	}
+	
+	
 }

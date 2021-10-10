@@ -10,9 +10,17 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <release>14</release>
+          <release>16</release>
         </configuration>
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+   	  <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
+		<dependency>
+	    	<groupId>org.xerial</groupId>
+	    	<artifactId>sqlite-jdbc</artifactId>
+	    	<version>3.34.0</version>
+		</dependency>
+   </dependencies>
 </project>
