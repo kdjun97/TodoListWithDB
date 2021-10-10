@@ -6,10 +6,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 import com.todo.dao.TodoItem;
 import com.todo.dao.TodoList;
+import com.todo.db.DbConnect;
 
 public class TodoUtil {
 	
@@ -105,8 +111,6 @@ public class TodoUtil {
 			System.out.println("수정되었습니다");
 	}
 	
-	
-
 	public static void listAll(TodoList l, String orderby, int ordering) {
 		System.out.println("[전체 목록, 총 " + l.getList().size() + "개]");
 		for (TodoItem item : l.getOrderedList(orderby, ordering)) {
@@ -114,31 +118,47 @@ public class TodoUtil {
 		}
 	}
 	
-	public static void listAll(TodoList l) {
-		System.out.println("[전체 목록, 총 " + l.getList().size() + "개]");
-		int count=0;
-		for (TodoItem item : l.getList()) {
-			System.out.print(item.toString());
+	public static void listAll(int num)
+	{
+		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
+		int ct=0;
+		if (num == 1)
+		{
+			Statement stmt;
+			Connection conn = DbConnect.getConnection();
+			
+			try {
+				stmt = conn.createStatement();
+				String sql = "SELECT * FROM TodoList";
+				ResultSet rs = stmt.executeQuery(sql);
+				
+				while(rs.next())
+				{
+		            int id = rs.getInt("id");
+		            String category = rs.getString("category");
+		            String title = rs.getString("title");
+		            String description = rs.getString("description");
+		            String due = rs.getString("due");
+		            String current_date = rs.getString("current_date");
+		            int is_completed = rs.getInt("is_completed");
+		            
+		            TodoItem t = new TodoItem(id, category, title, description, due, current_date, is_completed);
+		            list.add(t);
+		            ct++;
+				}			
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			System.out.printf("[전체 목록 총 %d개]\n",ct);
+			for (TodoItem item : list)
+				System.out.print(item.toString());
 		}
 	}
 	
-	
-	
-	public static void listAllCategory(TodoList l) {
-//		HashSet<String> temp = new HashSet<String>();
-//		
-//		for (TodoItem item : l.getList()) 
-//			temp.add(item.getCate());
-//		
-//		Iterator<String> iter = temp.iterator(); 
-//		int count = 0;
-//		
-//		while(iter.hasNext()){
-//            System.out.print(iter.next());
-//            if (++count != temp.size())
-//            	System.out.print(" / ");
-//        }
-		
+
+	public static void listAllCategory(TodoList l) {		
 		int count = 0;
 		for (String item : l.getCategories()) {
 			System.out.println(item + " ");
@@ -161,22 +181,19 @@ public class TodoUtil {
 	
 	public static void findCate(TodoList l, String keyWord)
 	{
-//		int num=0;
-//		int count=0;
-//		for (TodoItem item : l.getList())
-//		{
-//			num++;
-//			if (item.getCate().contains(keyWord)) // 카테고리 존재하면
-//			{
-//				System.out.print(item.toString());				
-//			}
-//		}
 		int count=0;
 		for (TodoItem item : l.getListCategory(keyWord)) {
 			System.out.println(item.toString());
 			count++;
 		}
 		System.out.println("총 " + count + "개의 항목을 찾았습니다.");
+	}
+	
+	public static void completeCheck(TodoList l, String keyWord)
+	{
+		int num = Integer.parseInt(keyWord); // 번호
+		l.checkItem(num);
+		System.out.println(num + "번 완료 체크하였습니다.");
 	}
 	
 	public static void saveList(TodoList l,String filename) {
@@ -193,29 +210,72 @@ public class TodoUtil {
 		}
 	}
 	
-	public static void loadList(TodoList l,String filename) {
+
+	public static void completeItem(TodoList l)
+	{
+		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
+		Statement stmt;
+		Connection conn = DbConnect.getConnection();
+		
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(filename));
-			String line;
+			stmt = conn.createStatement();
+			String sql = "SELECT * FROM TodoList WHERE is_completed=1";
+			ResultSet rs = stmt.executeQuery(sql);
 			
-			while((line = br.readLine())!=null) {
-				StringTokenizer st = new StringTokenizer(line,"##");
-				String category = st.nextToken();
-				String title = st.nextToken();
-				String desc = st.nextToken();
-				String due_date = st.nextToken();
-				String date = st.nextToken();
-				
-				TodoItem t = new TodoItem(category,title,desc,due_date);
-				t.setCurrent_date(date);
-				l.addItem(t);
-			}
-			br.close();
-			System.out.println("파일 읽기 완료.");
-		} catch (FileNotFoundException e) {
-			System.out.println("파일 못찾음.");
-		} catch (IOException e) {
+			while(rs.next())
+			{
+	            int id = rs.getInt("id");
+	            String category = rs.getString("category");
+	            String title = rs.getString("title");
+	            String description = rs.getString("description");
+	            String due = rs.getString("due");
+	            String current_date = rs.getString("current_date");
+	            int is_completed = rs.getInt("is_completed");
+	            
+	            TodoItem t = new TodoItem(id, category, title, description, due, current_date, is_completed);
+	            list.add(t);
+			}			
+			stmt.close();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		int ct=0;
+		
+		for (TodoItem item : list)
+		{
+			System.out.print(item.toString());
+			ct++;
+		}
+		System.out.printf("총 %d개의 항목이 완료되었습니다\n",ct);
+	}
+	
+	public static ArrayList<TodoItem> loadList(TodoList l,String filename) {
+		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
+		Statement stmt;
+		Connection conn = DbConnect.getConnection();
+		
+		try {
+			stmt = conn.createStatement();
+			String sql = "SELECT * FROM TodoList";
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			while(rs.next())
+			{
+	            int id = rs.getInt("id");
+	            String category = rs.getString("category");
+	            String title = rs.getString("title");
+	            String description = rs.getString("description");
+	            String due = rs.getString("due");
+	            String current_date = rs.getString("current_date");
+	            int is_completed = rs.getInt("is_completed");
+	            
+	            TodoItem t = new TodoItem(id, category, title, description, due, current_date, is_completed);
+	            list.add(t);
+			}			
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }

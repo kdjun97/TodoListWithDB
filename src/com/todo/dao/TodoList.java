@@ -313,6 +313,20 @@ public class TodoList {
 		return count;
 	}
 	
+	public void checkItem(int num) {
+		String sql = "UPDATE TodoList SET is_completed=? WHERE id=?;";
+		PreparedStatement pstmt;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, 1); // 완료체크
+			pstmt.setInt(2, num);
+			int count = pstmt.executeUpdate();
+			pstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int updateItem(TodoItem t)
 	{
 		String sql = "UPDATE TodoList SET title=?, description=?, category=?, current_date=?, due=?"

@@ -12,10 +12,11 @@ public class TodoMain {
 	public static void start() {
 		Scanner sc = new Scanner(System.in);
 		TodoList l = new TodoList();
-		//l.importData("todolist.txt");
+//		l.importData("todolist.txt");
 		boolean isList = false;
 		boolean quit = false;
-//		TodoUtil.loadList(l, "todolist.txt");		
+		TodoUtil.loadList(l, "mydb.db");
+		System.out.println(l.getList());
 		Menu.displaymenu();
 		
 		do {
@@ -42,7 +43,7 @@ public class TodoMain {
 				break;
 				
 			case "ls":
-				TodoUtil.listAll(l);
+				TodoUtil.listAll(1);
 				break;
 				
 			case "ls_cate":
@@ -77,7 +78,15 @@ public class TodoMain {
 				
 			case "find_cate":
 				TodoUtil.findCate(l, choices.split(" ")[1]); // keyWord라고만 가정함 (하나의 단어)
-				break;	
+				break;
+				
+			case "comp":
+				TodoUtil.completeCheck(l, choices.split(" ")[1]);
+				break;
+
+			case "ls_comp":
+				TodoUtil.completeItem(l);
+				break;
 
 			case "exit":
 				quit = true;

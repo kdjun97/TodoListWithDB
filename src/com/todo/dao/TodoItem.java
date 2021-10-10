@@ -10,6 +10,7 @@ public class TodoItem {
     private String current_date;
     private String category;
     private String due_date;
+    private int is_completed;
 
 
     public TodoItem(String title, String desc){
@@ -27,14 +28,34 @@ public class TodoItem {
     	this.due_date=due_date;
         SimpleDateFormat f = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
         this.current_date= f.format(new Date());
+        this.is_completed=0; // default
+    }
+    
+    public TodoItem(int id, String category, String title, String desc, String due_date, String current_date, int is_completed) // 오버로드
+    {
+    	this.id = id;
+    	this.category=category;
+    	this.title=title;
+    	this.desc=desc;
+    	this.due_date=due_date;
+        this.current_date= current_date;
+        this.is_completed=is_completed;
+    }
+    
+    public int getIsCompleted() {
+    	return this.is_completed;
+    }
+
+    public void setIsCompleted(int temp) {
+    	this.is_completed = temp;
     }
     
     public String getTitle() {
-        return title;
+        return this.title;
     }
     
     public int getId() {
-        return id;
+        return this.id;
     }
     
     public void setId(int temp) {
@@ -42,7 +63,7 @@ public class TodoItem {
     }
     
     public String getCategory() {
-        return category;
+        return this.category;
     }
 
     public void setTitle(String title) {
@@ -50,11 +71,11 @@ public class TodoItem {
     }
     
     public String getCate() {
-    	return category;
+    	return this.category;
     }
 
     public String getDesc() {
-        return desc;
+        return this.desc;
     }
 
     public void setDesc(String desc) {
@@ -62,11 +83,11 @@ public class TodoItem {
     }
 
     public String getCurrent_date() {
-        return current_date;
+        return this.current_date;
     }
     
     public String getDue_date() {
-        return due_date;
+        return this.due_date;
     }
 
     public void setCurrent_date(String current_date) {
@@ -79,6 +100,11 @@ public class TodoItem {
     
     @Override
     public String toString() {
-    	return id+". " + "[" + category + "] " + title + " - " + desc + " - " + due_date + " - " + current_date + "\n";
+    	String temp="";
+    	if (this.is_completed == 1)
+    		temp = this.getId() + ". " + "[" + this.getCategory() + "] " + this.getTitle() + "[V]"+ " - " + this.getDesc() + " - " + this.getDue_date() + " - " + this.getCurrent_date() + "\n";
+    	else
+    		temp = this.getId() + ". " + "[" + this.getCategory() + "] " + this.getTitle() + " - " + this.getDesc() + " - " + this.getDue_date() + " - " + this.getCurrent_date() + "\n";
+    	return temp;
     }
 }
