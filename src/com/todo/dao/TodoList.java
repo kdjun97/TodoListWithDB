@@ -64,7 +64,8 @@ public class TodoList {
 	            String description = rs.getString("description");
 	            String due = rs.getString("due");
 	            String current_date = rs.getString("current_date");
-	            TodoItem t = new TodoItem(category,title, description, due);
+	            int star = rs.getInt("star");
+	            TodoItem t = new TodoItem(category,title, description, due, star);
 	            t.setId(id);
 	            t.setCurrent_date(current_date);
 	            list.add(t);
@@ -95,7 +96,8 @@ public class TodoList {
 	            String description = rs.getString("description");
 	            String due = rs.getString("due");
 	            String current_date = rs.getString("current_date");
-	            TodoItem t = new TodoItem(category,title, description, due);
+	            int star = rs.getInt("star");
+	            TodoItem t = new TodoItem(category,title, description, due, star);
 	            t.setId(id);
 	            t.setCurrent_date(current_date);
 	            list.add(t);
@@ -128,7 +130,8 @@ public class TodoList {
 	            String description = rs.getString("description");
 	            String due = rs.getString("due");
 	            String current_date = rs.getString("current_date");
-	            TodoItem t = new TodoItem(category,title, description, due);
+	            int star = rs.getInt("star");
+	            TodoItem t = new TodoItem(category,title, description, due, star);
 	            t.setId(id);
 	            t.setCurrent_date(current_date);
 	            list.add(t);
@@ -140,10 +143,11 @@ public class TodoList {
 		}
 		return list;
 	}
+	
 
 	public int addItem(TodoItem t) {
-		String sql = "INSERT INTO TodoList (title, description, category, current_date, due)"
-					+ " VALUES (?,?,?,?,?);";
+		String sql = "INSERT INTO TodoList (title, description, category, current_date, due, star)"
+					+ " VALUES (?,?,?,?,?,?);";
 		PreparedStatement pstmt;
 		int count=0;
 		try {
@@ -153,6 +157,7 @@ public class TodoList {
 			pstmt.setString(3, t.getCategory());
 			pstmt.setString(4, t.getCurrent_date());
 			pstmt.setString(5, t.getDue_date());
+			pstmt.setInt(6, t.getStar());
 			count = pstmt.executeUpdate();
 			pstmt.close();
 
@@ -188,7 +193,8 @@ public class TodoList {
 				String description = rs.getString("description");
 				String due = rs.getString("due");
 				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(title, description, category, due);
+				int star = rs.getInt("star");
+				TodoItem t = new TodoItem(title, description, category, due, star);
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				list.add(t);
@@ -327,9 +333,23 @@ public class TodoList {
 		}
 	}
 	
+	public void checkDoingItem(int num) {
+		String sql = "UPDATE TodoList SET doing=? WHERE id=?;";
+		PreparedStatement pstmt;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, 1); // doing 체크
+			pstmt.setInt(2, num);
+			int count = pstmt.executeUpdate();
+			pstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int updateItem(TodoItem t)
 	{
-		String sql = "UPDATE TodoList SET title=?, description=?, category=?, current_date=?, due=?"
+		String sql = "UPDATE TodoList SET title=?, description=?, category=?, current_date=?, due=?, star=?, is_completed=0"
 					+ " WHERE id = ?;";
 		PreparedStatement pstmt;
 		int count = 0;
@@ -340,7 +360,8 @@ public class TodoList {
 			pstmt.setString(3, t.getCategory());
 			pstmt.setString(4, t.getCurrent_date());
 			pstmt.setString(5, t.getDue_date());
-			pstmt.setInt(6, t.getId());
+			pstmt.setInt(6, t.getStar());
+			pstmt.setInt(7, t.getId());
 			count = pstmt.executeUpdate();
 			pstmt.close();
 

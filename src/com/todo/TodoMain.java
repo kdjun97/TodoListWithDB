@@ -2,6 +2,7 @@ package com.todo;
 
 import java.util.Scanner;
 
+import com.todo.dao.TodoItem;
 import com.todo.dao.TodoList;
 import com.todo.menu.Menu;
 import com.todo.service.TodoUtil;
@@ -16,7 +17,6 @@ public class TodoMain {
 		boolean isList = false;
 		boolean quit = false;
 		TodoUtil.loadList(l, "mydb.db");
-		System.out.println(l.getList());
 		Menu.displaymenu();
 		
 		do {
@@ -24,6 +24,15 @@ public class TodoMain {
 			isList = false;
 			String choices = sc.nextLine();
 			String choice = choices.split(" ")[0];
+			String splitTest[] = choices.split(" ");
+
+			/*
+			System.out.println("********");
+			for (int i=0; i<splitTest.length; i++)
+				System.out.println(splitTest[i]);
+			System.out.println("********");
+			*/
+
 			
 			switch (choice) {
 			case "help": // help 명령어 시 display menu 기능 호출
@@ -62,30 +71,46 @@ public class TodoMain {
 				
 			case "ls_date":
 				System.out.println("날짜순으로 정렬완료! (오름차순)");
-				TodoUtil.listAll(l, "title", 1);
-
+				TodoUtil.listAll(l, "due", 1);
 				break;
 				
 			case "ls_date_desc":
 				System.out.println("날짜순으로 정렬완료! (내림차순)");
-				TodoUtil.listAll(l, "title", 0);
-
+				TodoUtil.listAll(l, "due", 0);
 				break;
-			
+				
+			case "ls_star":
+				System.out.println("중요도 순으로 정렬완료! (오름차순)");
+				TodoUtil.listAll(l, "star", 0);
+				break; 
+				
+			case "ls_star_desc":
+				System.out.println("중요도 순으로 정렬완료! (내림차순)");
+				TodoUtil.listAll(l, "star", 1);
+				break; 
+				
 			case "find":
-				TodoUtil.findKeyWord(l, choices.split(" ")[1]); // keyWord라고만 가정함 (하나의 단어)
+				TodoUtil.findKeyWord(l, splitTest); 
 				break;
 				
 			case "find_cate":
-				TodoUtil.findCate(l, choices.split(" ")[1]); // keyWord라고만 가정함 (하나의 단어)
+				TodoUtil.findCate(l, splitTest);
 				break;
 				
 			case "comp":
-				TodoUtil.completeCheck(l, choices.split(" ")[1]);
+				TodoUtil.completeCheck(l, splitTest);
 				break;
 
 			case "ls_comp":
 				TodoUtil.completeItem(l);
+				break;
+				
+			case "doing":
+				TodoUtil.doingCheck(l, splitTest);
+				break;
+
+			case "ls_doing":
+				TodoUtil.doingItem(l);
 				break;
 
 			case "exit":
